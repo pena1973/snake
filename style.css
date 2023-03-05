@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital@0;1&family=Yeseva+One&display=swap');
+
+body {
+    margin: 0;
+    font-family: Nunito Sans, Arial, Helvetica, sans-serif;
+}
+
+body * {
+    box-sizing: border-box;
+    /* background-color: rgba(24, 24, 24, 1); */
+    display: flex;
+    justify-content: center;
+    font-family: Nunito Sans;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 37px;
+    letter-spacing: 1px;
+    text-align: left;
+}
+
+.container {
+    display: flex;
+    max-width: 1000px;
+    max-height: 1000px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.tablo {
+    display: flex;
+    margin: 50px;
+    width: 200px;
+    height: 40px;
+    background-color: rgb(200, 200, 200);
+    border-width: 2px;
+    border-radius: 5px;
+    border-style: groove;
+    border-color: brown;
+
+}
+
+.granica {
+    width: 520px;
+    height: 520px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(200, 200, 200);
+    border-radius: 5px;
+}
+
+.pole {
+    width: 500px;
+    height: 500px;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+
+    grid-gap: 2px;
+    color: brown;
+    border-radius: 5px;
+    background-color: rgba(100, 100, 100, 1);
+    box-shadow: 10px 10px 20px 0px rgba(0, 0, 0, 0.03);
+
+}
+
+.apple {
+    background-color: green;
+    grid-column-start: 1;
+    grid-column-end: 1;
+    grid-row-start: 1;
+    grid-row-end: 1;
+    border-radius: 50%;
+}
+
+.square {
+    background-color: rgb(116, 143, 116);
+    /* grid-column-start: 2;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 1; */
+}
