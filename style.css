@@ -63,22 +63,23 @@ body * {
     border-radius: 5px;
     background-color: rgba(100, 100, 100, 1);
     box-shadow: 10px 10px 20px 0px rgba(0, 0, 0, 0.03);
-
 }
 
 .apple {
     background-color: green;
-    grid-column-start: 1;
-    grid-column-end: 1;
-    grid-row-start: 1;
-    grid-row-end: 1;
     border-radius: 50%;
 }
 
 .square {
     background-color: rgb(116, 143, 116);
-    /* grid-column-start: 2;
-    grid-column-end: 2;
-    grid-row-start: 1;
-    grid-row-end: 1; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Nunito Sans;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 17px;
+    letter-spacing: 0px;
+    text-align: left;
+
 }
