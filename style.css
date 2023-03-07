@@ -10,14 +10,16 @@ body * {
     /* background-color: rgba(24, 24, 24, 1); */
     display: flex;
     justify-content: center;
-    font-family: Nunito Sans;
+    /* font-family: Nunito Sans; */
     font-size: 14px;
     font-weight: 400;
     line-height: 37px;
     letter-spacing: 1px;
     text-align: left;
 }
-
+.none{
+    display: none;
+}
 .container {
     display: flex;
     max-width: 1000px;
@@ -25,12 +27,13 @@ body * {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-top: 30px;
 
 }
 
 .tablo {
     display: flex;
-    margin: 50px;
+    margin: 10px;
     width: 200px;
     height: 40px;
     background-color: rgb(200, 200, 200);
@@ -38,7 +41,31 @@ body * {
     border-radius: 5px;
     border-style: groove;
     border-color: brown;
+    font-size: 20px;
+    font-weight: 400;
 
+}
+.btn {
+    /* display: flex; */
+    margin: 10px;
+    width: 200px;
+    height: 40px; 
+    background-color: rgb(200, 200, 200);
+    border-width: 2px;
+    border-radius: 5px;
+    border-style: groove;
+    border-color: brown;
+    font-size: 20px;
+    font-weight: 400;
+    cursor: pointer;
+
+}
+
+.game{
+    margin: 5px;
+    font-size: 20px;
+    font-weight: 400;
+    height: 37px;
 }
 
 .granica {
@@ -63,6 +90,7 @@ body * {
     border-radius: 5px;
     background-color: rgba(100, 100, 100, 1);
     box-shadow: 10px 10px 20px 0px rgba(0, 0, 0, 0.03);
+    cursor: pointer;
 }
 
 .apple {
@@ -82,4 +110,40 @@ body * {
     letter-spacing: 0px;
     text-align: left;
 
+}
+
+.statistica{
+display: flex;
+flex-direction: column;
+ width: 30%;
+ /* font-size: 20px;
+ font-weight: 400; */
+ /* align-items: left;    */
+}
+
+.scaleLabel{
+display: flex;    
+justify-content: left;
+font-size: 20px;
+font-weight: 400;
+   line-height: 37px;
+   margin: 10px
+    /* letter-spacing: 1px;
+    text-align: left; */
+}
+
+.result{
+    display: flex;    
+justify-content: left;
+    margin: 10px;
+    font-size: 20px;
+    font-weight: 400;
+    text-align: left;
+    justify-self: center
+}
+.scale{
+    width: 100px;
+}
+.name{
+    width: 100px;
 }

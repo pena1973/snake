@@ -11,19 +11,23 @@
 
 <body>
     <header>
-
     </header>
     <main>
-        <div class="container">
-
-            <div class="tablo">Табло</div>
+        <div class="statistica">
+        <label class="scaleLabel" for="scale">Масштаб поля &nbsp;<input class="scale" type="number" id="scale" name="scale" placeholder='10' max="20" min="10"></label>
+        <label class="scaleLabel" for="name">Имя игрока &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="name" type="text" id="name" name="name" placeholder='Вася' ></label>
+        <div class="result"></div>
+        </div>
+        <div class="container">            
+            
+            <div class="tablo"></div>
+            <div class="game"></div>
             <div class="granica">
                 <div class="pole">
-                    <!-- <div class="apple"></div>
-                        
-                    <div class="square"></div> -->                    
                 </div>
             </div>
+            <!-- <div class="result"></div> -->
+            <button class="btn" type="button">Запуск заново</button>
 
         </div>
     </main>
