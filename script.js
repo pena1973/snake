@@ -3,9 +3,7 @@
 let scale = 10;
 // имя игрока
 let name = '';
-// переменная пока игра в процессе будет тру
-// чтобы в этот момент отключить возможность сброса настроек
-let gameInProcess = false;
+
 
 let poleDOM = document.querySelector(".pole");
 let tabloDOM = document.querySelector(".tablo");
@@ -16,14 +14,22 @@ let resetGameDom = document.getElementById("resetGame");
 let resetStorageDom = document.getElementById("resetStorage");
 let scaleDom = document.getElementById("scale");
 let nameDom = document.getElementById("name");
-// let square = document.querySelector('.square');
 
+// начальные
 let direction = 'Up';
 let result = 0;
 let bestResult = 0;
+// переменная пока игра в процессе будет тру
+// чтобы в этот момент отключить возможность сброса настроек
+let gameInProcess = false;
+// Интервал движения который будем ускорять
+let timeInterval = 500;
+// ID bнтервала движения чтоб отменить потом
+// сначала оно пустое
+let intervalID = null;
 
 // головной класс 
-// который отражает наполнение клетки (square) неким элементом  
+// который отражает наполнение клетки (square) неким элементом  (яблоко, либо кусок змеи)
 // и манипуляции с этой клеткой и элементом
 class Container {
 
@@ -31,9 +37,9 @@ class Container {
     #y = 0;
 
     dom = null;
-    
-    #rotate = 0;// поворот элемента
-    
+
+    #rotate = 0;// поворот изображения элемента
+
     constructor() { }
 
     // ставит контейнер с содержимым на поле
@@ -41,9 +47,9 @@ class Container {
         this.#x = x;
         this.#y = y;
         this.#rotate = rotate;
-        let square = document.getElementById(`X${x}Y${y}`);        
+        let square = document.getElementById(`X${x}Y${y}`);
         square.appendChild(this.dom);
-        this.dom.style.rotate = rotate+'deg';
+        this.dom.style.rotate = rotate + 'deg';
         // this.dom.style.borderRadius = '40%';
     }
     // удаляет контейнер из заданной ячейки
@@ -77,7 +83,6 @@ class Apple extends Container {
         this.dom.setAttribute('width', '80%');
         this.dom.setAttribute('height', '80%');
         this.dom.classList.add('apple');
-        // width="" height="" data-x="" data-y=""
     }
 
     // ставим яблоко на поле
@@ -91,19 +96,16 @@ class Apple extends Container {
             y = getRandom(1, scale);
         }
         super.set(x, y, 0);
-    }
-
-    // удаляем яблоко с поля
-    // используем метод контейнера    
+    }    
 }
 
 // тело змеи это массив контейнеров со своими координатами и содержимым
 // этот класс не наследник контейнера 
 class Snake {
 
-    #body = [];
+    #body = []; 
 
-    // создаем змею голова-тело(под вопросом)-хвост
+    // создаем змею голова-хвост
     constructor() {
 
         let head = new Container();
@@ -114,9 +116,6 @@ class Snake {
         head.dom.setAttribute('height', '100%');
         head.dom.classList.add('snake');
         this.#body.push(head);
-
-        // this.#body.push(this.createPart());
-        // this.#body.push(this.createPart());
 
         let tail = new Container();
         tail.dom = document.createElement('img');
@@ -131,13 +130,21 @@ class Snake {
     // Разместим змею на поле в стартовой точке
     // Передаю начальную точку куда поставить
     setInitial(x, y) {
-        // обнуляю для повторной инициации        
-        this.#body[0].set(x, y, 0);
-        this.#body[1].set(x + 1, y,0);
+        // если это рестарт из змеи вырежу тело
+        if (this.#body.length > 2) {
+            let head = this.#body[0];
+            let tail = this.#body[this.#body.length - 1];
+            this.#body = [];
+            this.#body.push(head);
+            this.#body.push(tail);
+        }
         
+        this.#body[0].set(x, y, 0);
+        this.#body[1].set(x + 1, y, 0);
     }
 
-    // Создание части тела змеи
+
+    // Создание средней части тела змеи
     createPart() {
         let part = new Container();
         part.dom = document.createElement('img');
@@ -145,17 +152,21 @@ class Snake {
         part.dom.setAttribute('alt', 'head');
         part.dom.setAttribute('width', '100%');
         part.dom.setAttribute('height', '100%');
-        part.dom.classList.add('snake');        
+        part.dom.classList.add('snake');
         return part;
     }
 
-    // двинем змею в целевую точку  остальное тело должно просто сдвинутся по имеющейся цепочке   
-    // походу проверяем если сьели яблоко удлиняемся
+    //  ГЛАВНАЯ функция змеи - движение
+    // двигаем  змею в целевую точку, 
+    // она задается в зависимнсти от входного параметра  -  направление
+    // остальное тело должно просто сдвинутся по имеющейся цепочке   
+    // в процессе проверяем если сьели яблоко удлиняемся
+    // если сьели себя  -  конец
     // выходе результат движения
     // true -  продолжаем игру
     // false  - конец
     move(directionNext) {
-        // если команда обратно, направвление движения не меняю
+        // если команда обратно, направвление движения не меняю змея идет как шла
         if ((directionNext == 'Right' && direction == 'Left')
             || (directionNext == 'Left' && direction == 'Right')
             || (directionNext == 'Up' && direction == 'Down')
@@ -170,6 +181,8 @@ class Snake {
         let newY = 0;
         let newRotate = 0;
         // устанавливаем новые координаты и сразу корректируем на пересечение границы
+        //  выйдем с другой стороны, здесь можно было и сразу на завершение отправить 
+        // но мне так есть больше нравится
         if (directionNext == 'Right') {
             newX = head.getX();
             newY = (head.getY() + 1) > scale ? 1 : head.getY() + 1;
@@ -188,42 +201,48 @@ class Snake {
             newRotate = 180;
         };
 
-        // проверка на поедание яблока
+        // проверка на поедание яблока если да выполняем действия
         if (this.eatAple(newX, newY)) {
+            // Увеличим результат
             result++;
-            // перепишем результат на форме
             tabloDOM.innerHTML = result;
+            
             // удалим яблоко с поля
             apple.remove();
-            // передвигаем на его место только голову и на место головы записываем обычную часть 
-            // и возвращаемся
-            let part = this.createPart();
-            this.#body.unshift(head); // добавили голову вместо яблока
+            // передвигаем на его место только голову 
+            // и на место головы записываем обычную часть и возвращаемся            
+            this.#body.unshift(head); // добавили голову вперед
             this.#body[1] = this.createPart(); //  вместо головы вписали часть
-            this.#body[1].set(head.getX(), head.getY(),head.getRotate()); // части присвоим координаты головы
+            this.#body[1].set(head.getX(), head.getY(), head.getRotate()); // части присвоим координаты головы
             head.set(newX, newY, newRotate) // голове присвоим новые координаты
-            // ставим новое яблоко (потом можно вынести в таймер)
+            // ставим новое яблоко
             apple.set();
-            return; // выходим
+            // увеличим скорость
+            timeInterval = (timeInterval > 100) ? timeInterval - 10 : timeInterval;
+            return true; // выходим
         }
 
-        // проверка на столкновение с собой
+        // проверка на столкновение с собой если да выполняем действия
         if (this.runDownSnake(newX, newY)) {
+            // сохраним лучший результат
             if (result > +bestResult) {
                 localStorage.setItem('bestResult', result);
             }
+            // покажем кнопку перезапуска игры и надпись            
             resetGameDom.classList.remove('none');
             gameDom.innerHTML = 'Игра окончена';
+            // активируем настройки 
             resetStorageDom.removeAttribute('disabled');
             scaleDom.removeAttribute('disabled');
             nameDom.removeAttribute('disabled');
-    
+            // Отметим что игра не в процессе
             gameInProcess = false;
+            // остановим движ
+            clearTimeout(intervalID);
             return false;
         }; // гейм закончен
 
         // если это обычное движение передвигаем координаты с хвоста
-
         for (let i = this.#body.length - 1; i > 0; i--) {
             // сдвинули тело
             this.#body[i].set(this.#body[i - 1].getX(), this.#body[i - 1].getY(), this.#body[i - 1].getRotate());
@@ -232,9 +251,9 @@ class Snake {
         head.set(newX, newY, newRotate);
 
         // коррекция ротации хвоста
-        let xTail = this.#body.length-1; // индекс хвоста
+        let xTail = this.#body.length - 1; // индекс хвоста
         this.#body[xTail].set(this.#body[xTail].getX(), this.#body[xTail].getY(), this.#body[xTail - 1].getRotate());
-        
+
         return true; // продолжаем играть
     }
 
@@ -256,60 +275,59 @@ class Snake {
     }
 }
 
+// мои главные актеры на поле
 let apple = new Apple();
 let snake = new Snake();
 
-// Инициация поля игры
+// Инициация игрового поля
 function init() {
+    
     // проверим наличие сохраненной шкалы
-
     if (!(!localStorage.getItem('scale'))) {
         scale = localStorage.getItem('scale');
     } else {
-        scale = 10;}
+        scale = 10;
+    }
     scaleDom.setAttribute('value', scale);
 
+    // проверим наличие имени
     if (!(!localStorage.getItem('name'))) {
         name = localStorage.getItem('name');
-    } else name ='';
+    } else name = '';
     nameDom.setAttribute('value', name);
-
+   
+    // вывели табло с результатом
     result = 0;
     tabloDOM.innerHTML = result;
+    
     //  очищаем поле если это перезапуск
     while (poleDOM.firstChild) {
         poleDOM.removeChild(poleDOM.firstChild);
     }
-    // раскраска поля
+    // разлиновка поля гридами
     poleDOM.style.gridTemplateColumns = `repeat(${scale}, 1fr)`;
     poleDOM.style.gridTemplateRows = `repeat(${scale}, 1fr)`;
-    
-    // grid-template-columns: repeat(10, 1fr);
-    // grid-template-rows: repeat(10, 1fr);
 
+    // заполняем зелеными квадратиками с координатами, координаты в id 
     for (let x = 1; x <= scale; x++) {
         for (let y = 1; y <= scale; y++) {
-            let square = document.createElement('div'); // создаём элемент клетку поля
-            square.classList.add('square'); // добавляем класс
+            let square = document.createElement('div'); 
+            square.classList.add('square'); 
             // console.log(11);
             square.id = `X${x}Y${y}`;
             square.style.gridcolumnstart = x;
             square.style.gridcolumnstart = x;
             square.style.gridrowstart = y;
             square.style.gridrowend = y;
-            // square.innerHTML = square.id;
             poleDOM.appendChild(square);
         }
     }
 
-    // Добавим яблоко (потом вынести в таймер)
-    apple.set(getRandom(1, scale), getRandom(1, scale),0);
-    // Добавим змею   
-    snake = new Snake();
-    let n = Math.round(scale/2);
+    // Добавим змею  в серединку
+    let n = Math.round(scale / 2);
     snake.setInitial(n, n);
 
-    // результат (надо вывести)
+    // результат  если есть в хранилище выведу
     gameDom.innerHTML = '';
     bestResult = localStorage.getItem('bestResult');
     if (!(!bestResult)) {
@@ -329,58 +347,66 @@ function getRandom(min, max) {
     // The maximum is inclusive and the minimum is inclusive
 }
 
+
 // листенеры
 //////////////////////////
 
-// При перезагрузе читаем сторидж
+// Перезагруз страницы
 document.addEventListener("DOMContentLoaded", function () {
-
-    // render(myJSON);
-    // Инициация игры
-    init();
+ init();
 
 });
 
+// лювлю нажатия кнопок клавиатуры со стрелками
 addEventListener("keydown", function (ev) {
-
     if (ev.code == 'ArrowRight') {
-        snake.move('Right');
+        direction = 'Right';       
     }
     if (ev.code == 'ArrowLeft') {
-        snake.move('Left');
+        direction = 'Left';       
     }
     if (ev.code == 'ArrowUp') {
-        snake.move('Up');
+        direction = 'Up';       
     }
     if (ev.code == 'ArrowDown') {
-        snake.move('Down');
+        direction = 'Down';       
     }
 });
 
-addEventListener("click", function (ev) {
+// слушаю события на поле браузера смотря куда кликнут
+addEventListener("click", function (ev) {    
+    // начало новой игры    
     if (ev.target == resetGameDom && !gameInProcess) {
         init();
+     // сброс настроек и результата
     } else if (ev.target == resetStorageDom && !gameInProcess) {
-        localStorage.clear();       
-        init();    
-    } else if (ev.target == scaleDom && !gameInProcess) {
-        localStorage.setItem('scale', scaleDom.value);       
+        localStorage.clear();
         init();
+    // изменение масштаба
+    } else if (ev.target == scaleDom && !gameInProcess) {
+        localStorage.setItem('scale', scaleDom.value);
+        init();
+    // изменение имени игрока
     } else if (ev.target == nameDom && !gameInProcess) {
         localStorage.setItem('name', nameDom.value);
-    } else if (ev.target.parentElement == poleDOM && !gameInProcess) {         
+    // клик по зеленому полю запуск игры
+    } else if (ev.target.parentElement == poleDOM && !gameInProcess) {
+        // чтою юзер во время игры не нажал не нужные кнопки  -  делаю неактивными
         resetStorageDom.setAttribute('disabled', true);
         scaleDom.setAttribute('disabled', true);
         nameDom.setAttribute('disabled', true);
-        gameInProcess = true;
-    //    старт 
-        
+        //    старт 
+        gameInProcess = true;        
+        // Добавим яблоко изначально
+        apple.set(getRandom(1, scale), getRandom(1, scale), 0);
+        timeInterval = 500; // сбросим таймер
+        // запустим Движ
+        intervalID = setInterval(() => {
+            snake.move(direction);
+        }, timeInterval);
     }
     else {
-        // localStorage.setItem('name', nameDom.getAttribute('name'));
-        // localStorage.setItem('scale', scaleDom.getAttribute('value'));
-        console.log("click");
-        // запускаем таймер  
+        console.log("клик вне зеленого поля и кнопок - не реагирую");
     }
 });
 
