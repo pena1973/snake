@@ -13,13 +13,9 @@
     <header>
     </header>
     <main>
-        <div class="statistica">
-        <label class="scaleLabel" for="scale">Масштаб поля &nbsp;<input class="scale" type="number" id="scale" name="scale" placeholder='10' max="20" min="10"></label>
-        <label class="scaleLabel" for="name">Имя игрока &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="name" type="text" id="name" name="name" placeholder='Вася' ></label>
-        <div class="result"></div>
-        </div>
-        <div class="container">            
-            
+
+        <div class="container">
+
             <div class="tablo"></div>
             <div class="game"></div>
             <div class="granica">
@@ -27,8 +23,16 @@
                 </div>
             </div>
             <!-- <div class="result"></div> -->
-            <button class="btn" type="button">Запуск заново</button>
+            <button id="resetGame" class="btn" type="button">Запуск заново</button>
 
+        </div>
+        <div class="statistica">
+            <label class="scaleLabel" for="scale">Масштаб поля &nbsp;<input class="scale" type="number" id="scale"
+                    name="scale" placeholder='10' max="20" min="10"></label>
+            <label class="scaleLabel" for="name">Имя игрока &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="name"
+                    type="text" id="name" name="name" placeholder='Вася'></label>
+            <div class="result"></div>
+            <button id="resetStorage" class="btn" type="button">Сброс настроек</button>
         </div>
     </main>
     <script src="script.js"></script>

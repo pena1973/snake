@@ -17,9 +17,11 @@ body * {
     letter-spacing: 1px;
     text-align: left;
 }
-.none{
+
+.none {
     display: none;
 }
+
 .container {
     display: flex;
     max-width: 1000px;
@@ -45,11 +47,12 @@ body * {
     font-weight: 400;
 
 }
+
 .btn {
     /* display: flex; */
     margin: 10px;
     width: 200px;
-    height: 40px; 
+    height: 40px;
     background-color: rgb(200, 200, 200);
     border-width: 2px;
     border-radius: 5px;
@@ -61,7 +64,7 @@ body * {
 
 }
 
-.game{
+.game {
     margin: 5px;
     font-size: 20px;
     font-weight: 400;
@@ -93,6 +96,7 @@ body * {
     cursor: pointer;
 }
 
+
 .apple {
     background-color: green;
     border-radius: 50%;
@@ -112,38 +116,40 @@ body * {
 
 }
 
-.statistica{
-display: flex;
-flex-direction: column;
- width: 30%;
- /* font-size: 20px;
- font-weight: 400; */
- /* align-items: left;    */
+.statistica {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    margin-left: 30px;
 }
 
-.scaleLabel{
-display: flex;    
-justify-content: left;
-font-size: 20px;
-font-weight: 400;
-   line-height: 37px;
-   margin: 10px
-    /* letter-spacing: 1px;
+.scaleLabel {
+    display: flex;
+    justify-content: left;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 37px;
+    margin: 10px;
+    /* padding-left: 30px */
+        /* letter-spacing: 1px;
     text-align: left; */
 }
 
-.result{
-    display: flex;    
-justify-content: left;
+.result {
+    display: flex;
+    justify-content: left;
     margin: 10px;
+    /* margin-left: 30px; */
     font-size: 20px;
     font-weight: 400;
     text-align: left;
     justify-self: center
 }
-.scale{
+
+.scale {
     width: 100px;
 }
-.name{
+
+.name {
     width: 100px;
 }
