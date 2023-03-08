@@ -288,13 +288,13 @@ function init() {
     } else {
         scale = 10;
     }
-    scaleDom.setAttribute('value', scale);
+    scaleDom.value = scale;
 
     // проверим наличие имени
     if (!(!localStorage.getItem('name'))) {
         name = localStorage.getItem('name');
     } else name = '';
-    nameDom.setAttribute('value', name);
+    nameDom.value = name;
    
     // вывели табло с результатом
     result = 0;
@@ -376,18 +376,19 @@ addEventListener("keydown", function (ev) {
 // слушаю события на поле браузера смотря куда кликнут
 addEventListener("click", function (ev) {    
     // начало новой игры    
-    if (ev.target == resetGameDom && !gameInProcess) {
+    if (ev.target == resetGameDom ) {
         init();
      // сброс настроек и результата
-    } else if (ev.target == resetStorageDom && !gameInProcess) {
+    } else if (ev.target == resetStorageDom) {
         localStorage.clear();
+
         init();
     // изменение масштаба
-    } else if (ev.target == scaleDom && !gameInProcess) {
+    } else if (ev.target == scaleDom) {
         localStorage.setItem('scale', scaleDom.value);
         init();
     // изменение имени игрока
-    } else if (ev.target == nameDom && !gameInProcess) {
+    } else if (ev.target == nameDom) {
         localStorage.setItem('name', nameDom.value);
     // клик по зеленому полю запуск игры
     } else if (ev.target.parentElement == poleDOM && !gameInProcess) {
