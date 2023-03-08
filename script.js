@@ -143,9 +143,8 @@ class Snake {
         this.#body[1].set(x + 1, y, 0);
     }
 
-
     // Создание средней части тела змеи
-    createPart() {
+    #createPart() {
         let part = new Container();
         part.dom = document.createElement('img');
         part.dom.setAttribute('src', './images/body.png');
@@ -202,7 +201,7 @@ class Snake {
         };
 
         // проверка на поедание яблока если да выполняем действия
-        if (this.eatAple(newX, newY)) {
+        if (this.#eatAple(newX, newY)) {
             // Увеличим результат
             result++;
             tabloDOM.innerHTML = result;
@@ -212,7 +211,7 @@ class Snake {
             // передвигаем на его место только голову 
             // и на место головы записываем обычную часть и возвращаемся            
             this.#body.unshift(head); // добавили голову вперед
-            this.#body[1] = this.createPart(); //  вместо головы вписали часть
+            this.#body[1] = this.#createPart(); //  вместо головы вписали часть
             this.#body[1].set(head.getX(), head.getY(), head.getRotate()); // части присвоим координаты головы
             head.set(newX, newY, newRotate) // голове присвоим новые координаты
             // ставим новое яблоко
@@ -257,7 +256,7 @@ class Snake {
         return true; // продолжаем играть
     }
 
-    // проверяет пересечения новых координат c любой частью тела змеи      
+    // проверяет пересечения новых координат(любого предмета) c любой частью тела змеи      
     // true - пересечения есть
     // falce - пересечение  нет
     runDownSnake(x, y) {
@@ -270,7 +269,7 @@ class Snake {
     // проверяет столкновения  головы (новых координат) с яблоком
     // true - Сьели
     // falce - Не сьели
-    eatAple(newX, newY) {
+    #eatAple(newX, newY) {
         return (apple.getX() == newX && apple.getY() == newY) ? true : false;
     }
 }
